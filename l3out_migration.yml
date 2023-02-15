@@ -31,6 +31,6 @@
     cisco.aci.aci_bd_to_l3out:
       <<: *login
       bd: web_servers
-      l3out: OSPF_L3OUT
-      tenant: prod
+      l3out: OSPF_L3Out
+      tenant: VHTest
       state: present
