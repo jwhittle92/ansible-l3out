@@ -1,0 +1,84 @@
+state: present
+
+# Tenant Config
+tenant: Presidio
+
+pref_group: yes
+pod: 1
+
+app_profile: Web_Application
+
+vrf: Production
+
+bridge_domains:
+- { bd: "Web_BD", vrf: "Production" }
+- { bd: "App_BD", vrf: "Production" }
+- { bd: "DB_BD", vrf: "Production" }
+
+
+epgs:
+- { epg: "Web", bd: "Web_BD" }
+- { epg: "App", bd: "App_BD"}
+- { epg: "DB", bd: "DB_BD" }
+
+
+epgs_domains:
+- { epg: "Web", domain: "Presidio_PHYS" }
+- { epg: "App", domain: "Presidio_PHYS" }
+- { epg: "DB", domain: "Presidio_PHYS" }
+
+bd_subnet:
+- { bd: "Web_BD", gw: "10.10.1.1" }
+- { bd: "App_BD", gw: "10.11.1.1" }
+- { bd: "DB_BD", gw: "10.12.1.1" }
+
+
+# Fabric config
+
+vlan_pool: Server_VLANs
+
+vlan_block_first: 10
+vlan_block_last: 50
+
+domain: Presidio_PHYS
+aep: Presidio_AEP
+access_policy_name: auto_access
+
+int_profile_name:
+- Presidio-L101
+- Presidio-L102
+
+leaf_profile_name:
+- Presidio-L101
+- Presidio-L102
+
+leaf_profile:
+- { leaf: "Presidio-L101", leaf_id: "101" }
+- { leaf: "Presidio-L102", leaf_id: "102" }
+
+leaf_int_profile:
+- { leaf: "Presidio-L101", int_profile: "Presidio-L101"}
+- { leaf: "Presidio-L102", int_profile: "Presidio-L102"}
+
+
+int_profile:
+- { int_type: "switch_port", profile: "Presidio-L101", selector: "1-10", polgro: "auto_access", interface: "10", description: "Web Server" }
+- { int_type: "switch_port", profile: "Presidio-L101", selector: "1-11", polgro: "auto_access", interface: "11", description: "App Server" }
+- { int_type: "switch_port", profile: "Presidio-L101", selector: "1-12", polgro: "auto_access", interface: "12", description: "DB Server" }
+
+- { int_type: "switch_port", profile: "Presidio-L102", selector: "1-10", polgro: "auto_access", interface: "10", description: "Web Server" }
+- { int_type: "switch_port", profile: "Presidio-L102", selector: "1-11", polgro: "auto_access", interface: "11", description: "App Server" }
+- { int_type: "switch_port", profile: "Presidio-L102", selector: "1-12", polgro: "auto_access", interface: "12", description: "DB Server" }
+
+epg_ports:
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/20", leaf: "101" }
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/20", leaf: "101" }
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/21", leaf: "101" }
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/22", leaf: "101" }
+
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/20", leaf: "102" }
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/21", leaf: "102" }
+- { epg: "Web", vlan: "10", int_mode: "native", int_type: "switch_port", interface: "1/22", leaf: "102" }
+
+
+

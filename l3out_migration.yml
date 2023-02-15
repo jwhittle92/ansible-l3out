@@ -1,0 +1,36 @@
+---
+- name: Swap L3Outs from "web_servers"
+  hosts: apic
+  connection: local
+  gather_facts: False
+  vars:
+    creds: &login
+      host: "{{ inventory_hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+      state: "{{ state }}"
+
+
+  tasks:
+
+  - name: Delete L3Out from Bridge 
+    cisco.aci.aci_tenant:
+      <<: *login
+      tenant: "{{ tenant }}"
+
+  - name: Remove old L3Out from BD
+    cisco.aci.aci_bd_to_l3out:
+      <<: *login
+      bd: web_servers
+      l3out: EIGRP_L3Out
+      tenant: VHTest
+      state: absent
+
+  - name: Add new L3Out to BD
+    cisco.aci.aci_bd_to_l3out:
+      <<: *login
+      bd: web_servers
+      l3out: OSPF_L3OUT
+      tenant: prod
+      state: present
